@@ -19,7 +19,8 @@ object ParkingLot {
         println("leave - removes a parked car from a numbered spot.")
         println("    Example: \"leave 2\"")
         println("status - shows spot number, car id, and color of any parked cars.")
-        println("reg_by_color - prints all registration numbers of cars of a particular color, taking color as a parameter.")
+        println("reg_by_color - prints all registration numbers of cars of a particular color, taking color as a " +
+                "parameter.")
         println("    Example: \"reg_by_color red\"")
         println("spot_by_color - prints the parking space numbers of all the cars of a particular color.")
         println("    Example: \"spot_by_color red\"")
@@ -39,7 +40,8 @@ object ParkingLot {
                 when (find) {
                     0 -> results += "${index + 1} ${carID[index]} ${carColor[index]}\n"
                     1 -> if (carColor[index].toLowerCase() == search.toLowerCase()) results += "${carID[index]} "
-                    in 2..3 -> if (carColor[index].toLowerCase() == search.toLowerCase() || carID[index] == search) results += "${index + 1} "
+                    in 2..3 -> if (carColor[index].toLowerCase() == search.toLowerCase() || carID[index] == search)
+                        results += "${index + 1} "
                 }
             }
         }
@@ -51,16 +53,10 @@ object ParkingLot {
                     else -> "No cars with registration number $search were found."
                 }
             )
-        } else {
-            println(
-                when (find) {
-                    0 -> results.trim()
-                    else -> {
-                        results.trim().splitToSequence(" ").toList().toString().replace("[", "").replace("]", "")
-                    }
-                }
-            )
-        }
+        } else println(
+            if (find == 0 || find == 3) results.trim() else results.trim().splitToSequence(" ").toList()
+                .toString().replace("[", "").replace("]", "")
+        )
     }
 
     private fun isNumber(number: String): Boolean {
@@ -118,7 +114,8 @@ object ParkingLot {
             }
         } else {
             when (string[0]) {
-                "park" -> if (string.getOrNull(1) == null || string.getOrNull(2) == null) errorBounds() else park(string[2], string[1])
+                "park" -> if (string.getOrNull(1) == null || string.getOrNull(2) == null) errorBounds()
+                else park(string[2], string[1])
                 "leave" -> if (string.getOrNull(1) == null) errorBounds() else leave(string[1])
                 "status" -> info(0, "")
                 "reg_by_color" -> if (string.getOrNull(1) == null) errorBounds() else info(1, string[1])
