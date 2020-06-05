@@ -136,7 +136,7 @@ fun main() {
     print("Please enter the number of parking spaces for your parking lot: ")
     var string = ("create " + scanner.nextLine()).split(" ").toTypedArray()
 
-    do  {
+    do {
         ParkingLot.service(string)
         print("Please enter a new command (help - for a list): ")
         string = scanner.nextLine().split(" ").toTypedArray()
