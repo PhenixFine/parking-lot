@@ -14,21 +14,24 @@ object ParkingLot {
     }
 
     private fun help() {
-        println("park - parks a car. Please enter a unique car ID and the color of the car.")
-        println("    Example: \"park KA-01-HH-9999 Red\"")
-        println("leave - removes a parked car from a numbered spot.")
-        println("    Example: \"leave 2\"")
-        println("status - shows spot number, car id, and color of any parked cars.")
-        println("reg_by_color - prints all registration numbers of cars of a particular color, taking color as a " +
-                "parameter.")
-        println("    Example: \"reg_by_color red\"")
-        println("spot_by_color - prints the parking space numbers of all the cars of a particular color.")
-        println("    Example: \"spot_by_color red\"")
-        println("spot_by_reg - returns the number of the spot where a car is located based on its registration number")
-        println("    Example: \"spot_by_reg KA-01-HH-9999\"")
-        println("create - creates a new parking lot according to size received and erases previous parking lot")
-        println("    Example: \"create 20\"")
-        println("exit - exits the program")
+        println(
+            """
+            park - parks a car. Please enter a unique car ID and the color of the car.
+                Example: "park KA-01-HH-9999 Red"
+            leave - removes a parked car from a numbered spot.
+                Example: "leave 2"
+            status - shows spot number, car id, and color of any parked cars
+            reg_by_color - prints all registration numbers of cars of a particular color, taking color as a parameter.
+                Example: "reg_by_color red"
+            spot_by_color - prints the parking space numbers of all the cars of a particular color.
+                Example: "spot_by_color red"
+            spot_by_reg - returns the number of the spot where a car is located based on its registration number
+                Example: "spot_by_reg KA-01-HH-9999"
+            create - creates a new parking lot according to size received and erases previous parking lot
+                Example: "create 20" 
+            exit - exits the program
+        """.trimIndent()
+        )
     }
 
     // find: 0 = status, 1 = reg_by_color, 2 = spot_by_color, 3 = spot_by_reg
@@ -66,9 +69,8 @@ object ParkingLot {
     private fun leave(number: String) {
         if (isNumber(number)) {
             if (number.toInt() <= spotEmpty.size) {
-                if (spotEmpty[number.toInt() - 1]) {
-                    println("There is no car in spot $number.")
-                } else {
+                if (spotEmpty[number.toInt() - 1]) println("There is no car in spot $number.")
+                else {
                     println("Spot $number is free.")
                     spotEmpty[number.toInt() - 1] = true
                 }
