@@ -69,8 +69,7 @@ object ParkingLot {
     private fun leave(number: String) {
         if (isNumber(number)) {
             if (number.toInt() <= spotEmpty.size) {
-                if (spotEmpty[number.toInt() - 1]) println("There is no car in spot $number.")
-                else {
+                if (spotEmpty[number.toInt() - 1]) println("There is no car in spot $number.") else {
                     println("Spot $number is free.")
                     spotEmpty[number.toInt() - 1] = true
                 }
