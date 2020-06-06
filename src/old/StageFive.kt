@@ -7,13 +7,9 @@ object ParkingLot {
     private lateinit var carColor: Array<String>
     private lateinit var carID: Array<String>
 
-    private fun errorBounds() {
-        println("was not given enough info, please try again")
-    }
+    private fun errorBounds() = println("was not given enough info, please try again")
 
-    private fun errorNumber(string: String) {
-        println("${string[1]} is not a number")
-    }
+    private fun errorNumber(string: String) = println("${string[1]} is not a number")
 
     // find: 0 = status, 1 = reg_by_color, 2 = spot_by_color, 3 = spot_by_reg
     private fun info(find: Int, search: String) {
@@ -24,7 +20,8 @@ object ParkingLot {
                 when (find) {
                     0 -> results += "${index + 1} ${carID[index]} ${carColor[index]}\n"
                     1 -> if (carColor[index].toLowerCase() == search.toLowerCase()) results += "${carID[index]} "
-                    in 2..3 -> if (carColor[index].toLowerCase() == search.toLowerCase() || carID[index] == search) results += "${index + 1} "
+                    2 -> if (carColor[index].toLowerCase() == search.toLowerCase()) results += "${index + 1} "
+                    3 -> if (carID[index] == search) results += "${index + 1} "
                 }
             }
         }
@@ -36,21 +33,17 @@ object ParkingLot {
                     else -> "No cars with registration number $search were found."
                 }
             )
-        } else {
-            println(
-                when (find) {
-                    0 -> results.trim()
-                    else -> {
-                        results.trim().splitToSequence(" ").toList().toString().replace("[", "").replace("]", "")
-                    }
-                }
-            )
-        }
+        } else println(
+            if (find == 0) results.trim() else results.trim().splitToSequence(" ").toList()
+                .toString().replace("[", "").replace("]", "")
+        )
     }
 
-    private fun isNumber(number: String): Boolean {
-        return number.toIntOrNull() != null
+    private fun isNull(string: Array<String>, num1: Int = 0, num2: Int = 1): Boolean {
+        return string.getOrNull(num1) == null || string.getOrNull(num2) == null
     }
+
+    private fun isNumber(number: String) = number.toIntOrNull() != null
 
     private fun leave(number: String) {
         if (isNumber(number)) {
@@ -90,18 +83,18 @@ object ParkingLot {
     fun service(string: Array<String>) {
         if (!this::spotEmpty.isInitialized) {
             when (string[0]) {
-                "create" -> if (string.getOrNull(1) == null) errorBounds() else reset(string[1])
+                "create" -> if (isNull(string)) errorBounds() else reset(string[1])
                 else -> println("Sorry, a parking lot has not been created.")
             }
         } else {
             when (string[0]) {
-                "park" -> if (string.getOrNull(1) == null || string.getOrNull(2) == null) errorBounds() else park(string[2], string[1])
-                "leave" -> if (string.getOrNull(1) == null) errorBounds() else leave(string[1])
+                "park" -> if (isNull(string, 1, 2)) errorBounds() else park(string[2], string[1])
+                "leave" -> if (isNull(string)) errorBounds() else leave(string[1])
                 "status" -> info(0, "")
-                "reg_by_color" -> if (string.getOrNull(1) == null) errorBounds() else info(1, string[1])
-                "spot_by_color" -> if (string.getOrNull(1) == null) errorBounds() else info(2, string[1])
-                "spot_by_reg" -> if (string.getOrNull(1) == null) errorBounds() else info(3, string[1])
-                "create" -> if (string.getOrNull(1) == null) errorBounds() else reset(string[1])
+                "reg_by_color" -> if (isNull(string)) errorBounds() else info(1, string[1])
+                "spot_by_color" -> if (isNull(string)) errorBounds() else info(2, string[1])
+                "spot_by_reg" -> if (isNull(string)) errorBounds() else info(3, string[1])
+                "create" -> if (isNull(string)) errorBounds() else reset(string[1])
             }
         }
     }
