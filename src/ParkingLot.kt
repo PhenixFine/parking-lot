@@ -1,25 +1,25 @@
-import java.util.*
+import utility.isNumber
 
-object ParkingLot {
-    private lateinit var SPOT_EMPTY: Array<Boolean>
-    private lateinit var CAR_COLOR: Array<String>
-    private lateinit var CAR_ID: Array<String>
+class ParkingLot {
+    private lateinit var spotEmpty: Array<Boolean>
+    private lateinit var carColor: Array<String>
+    private lateinit var carID: Array<String>
 
-    fun service(string: Array<String>) {
-        if (!this::SPOT_EMPTY.isInitialized) {
-            when (string[0]) {
-                "create" -> if (isNull(string)) errorBounds() else reset(string[1])
+    fun service(command: Array<String>) {
+        if (!this::spotEmpty.isInitialized) {
+            when (command[0]) {
+                "create" -> if (isNull(command)) errorBounds() else reset(command[1])
                 else -> println("Sorry, a parking lot has not been created.")
             }
         } else {
-            when (string[0]) {
-                "park" -> if (isNull(string, 1, 2)) errorBounds() else park(string[2], string[1])
-                "leave" -> if (isNull(string)) errorBounds() else leave(string[1])
+            when (command[0]) {
+                "park" -> if (isNull(command, 1, 2)) errorBounds() else park(command[2], command[1])
+                "leave" -> if (isNull(command)) errorBounds() else leave(command[1])
                 "status" -> info(0, "")
-                "reg_by_color" -> if (isNull(string)) errorBounds() else info(1, string[1])
-                "spot_by_color" -> if (isNull(string)) errorBounds() else info(2, string[1])
-                "spot_by_reg" -> if (isNull(string)) errorBounds() else info(3, string[1])
-                "create" -> if (isNull(string)) errorBounds() else reset(string[1])
+                "reg_by_color" -> if (isNull(command)) errorBounds() else info(1, command[1])
+                "spot_by_color" -> if (isNull(command)) errorBounds() else info(2, command[1])
+                "spot_by_reg" -> if (isNull(command)) errorBounds() else info(3, command[1])
+                "create" -> if (isNull(command)) errorBounds() else reset(command[1])
                 "help" -> help()
             }
         }
@@ -27,28 +27,28 @@ object ParkingLot {
 
     private fun reset(number: String) {
         if (isNumber(number)) {
-            SPOT_EMPTY = Array(number.toInt()) { true }
-            CAR_COLOR = Array(number.toInt()) { "" }
-            CAR_ID = Array(number.toInt()) { "" }
+            spotEmpty = Array(number.toInt()) { true }
+            carColor = Array(number.toInt()) { "" }
+            carID = Array(number.toInt()) { "" }
             println("Created a parking lot with $number spots.")
         } else errorNumber(number)
     }
 
     private fun park(color: String, id: String) {
-        for (index in SPOT_EMPTY.indices) {
-            if (!SPOT_EMPTY[index]) {
-                if (CAR_ID[index] == id) {
+        for (index in spotEmpty.indices) {
+            if (!spotEmpty[index]) {
+                if (carID[index] == id) {
                     println("Please enter a unique ID for the car.")
                     return
                 }
             }
         }
-        for (index in SPOT_EMPTY.indices) {
-            if (SPOT_EMPTY[index]) {
+        for (index in spotEmpty.indices) {
+            if (spotEmpty[index]) {
                 println("$color car parked in spot ${index + 1}.")
-                SPOT_EMPTY[index] = false
-                CAR_COLOR[index] = color
-                CAR_ID[index] = id
+                spotEmpty[index] = false
+                carColor[index] = color
+                carID[index] = id
                 return
             }
         }
@@ -57,10 +57,10 @@ object ParkingLot {
 
     private fun leave(number: String) {
         if (isNumber(number)) {
-            if (number.toInt() <= SPOT_EMPTY.size) {
-                if (SPOT_EMPTY[number.toInt() - 1]) println("There is no car in spot $number.") else {
+            if (number.toInt() <= spotEmpty.size) {
+                if (spotEmpty[number.toInt() - 1]) println("There is no car in spot $number.") else {
                     println("Spot $number is free.")
-                    SPOT_EMPTY[number.toInt() - 1] = true
+                    spotEmpty[number.toInt() - 1] = true
                 }
             } else println("there is no spot $number.")
         } else errorNumber(number)
@@ -70,13 +70,13 @@ object ParkingLot {
     private fun info(find: Int, search: String) {
         var results = ""
 
-        for (index in SPOT_EMPTY.indices) {
-            if (!SPOT_EMPTY[index]) {
+        for (index in spotEmpty.indices) {
+            if (!spotEmpty[index]) {
                 when (find) {
-                    0 -> results += "${index + 1} ${CAR_ID[index]} ${CAR_COLOR[index]}\n"
-                    1 -> if (CAR_COLOR[index].toLowerCase() == search.toLowerCase()) results += "${CAR_ID[index]} "
-                    2 -> if (CAR_COLOR[index].toLowerCase() == search.toLowerCase()) results += "${index + 1} "
-                    3 -> if (CAR_ID[index] == search) results += "${index + 1} "
+                    0 -> results += "${index + 1} ${carID[index]} ${carColor[index]}\n"
+                    1 -> if (carColor[index].toLowerCase() == search.toLowerCase()) results += "${carID[index]} "
+                    2 -> if (carColor[index].toLowerCase() == search.toLowerCase()) results += "${index + 1} "
+                    3 -> if (carID[index] == search) results += "${index + 1} "
                 }
             }
         }
@@ -89,8 +89,7 @@ object ParkingLot {
                 }
             )
         } else println(
-            if (find == 0 || find == 3) results.trim() else results.trim().splitToSequence(" ").toList()
-                .toString().replace("[", "").replace("]", "")
+            if (find == 0 || find == 3) results.trim() else results.trim().replace(" ", ", ")
         )
     }
 
@@ -122,18 +121,4 @@ object ParkingLot {
     private fun isNull(string: Array<String>, num1: Int = 0, num2: Int = 1): Boolean {
         return string.getOrNull(num1) == null || string.getOrNull(num2) == null
     }
-
-    private fun isNumber(number: String) = number.toIntOrNull() != null
-}
-
-fun main() {
-    val scanner = Scanner(System.`in`)
-    print("Please enter the number of parking spaces for your parking lot: ")
-    var string = ("create " + scanner.nextLine()).split(" ").toTypedArray()
-
-    do {
-        ParkingLot.service(string)
-        print("Please enter a new command (help - for a list): ")
-        string = scanner.nextLine().split(" ").toTypedArray()
-    } while (string[0] != "exit")
 }
